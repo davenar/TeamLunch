@@ -1,0 +1,69 @@
+<ion-content>
+  <ion-grid *ngIf="!isRegistrationForm">
+    <ion-row style="margin-top: 15px;">
+      <ion-col></ion-col>
+      <ion-col>
+        <form (ngSubmit)="login()" style="display: inline-flex;" #loginForm="ngForm">
+          <ion-list style="--background: white; padding-top: 0px; padding-bottom: 0px;">
+        <ion-item lines="full" style="--background: white;">
+          <ion-label>Username:</ion-label>
+          <ion-input [(ngModel)]="username" type="text" name="userName" #userName
+            style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+        </ion-item>
+        <ion-item lines="full" style="--background: white;">
+          <ion-label>Password:</ion-label>
+          <ion-input [(ngModel)]="password" type="password" name="password"
+            style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+        </ion-item>
+        <ion-button type="submit" size="default" color="primary" [disabled]="!loginForm.form.valid">
+          <ion-icon name="log-in-outline" slot="end"></ion-icon>LOGIN
+        </ion-button>
+        <ion-button (click)="registerFormToggle()" size="default" color="medium">
+          <ion-icon name="person-add-outline" slot="end"></ion-icon>REGISTRATI
+        </ion-button>
+      </ion-list>
+    </form>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="isRegistrationForm">
+    <ion-row style="margin-top: 15px;">
+      <ion-col></ion-col>
+      <ion-col>
+        <form (ngSubmit)="register()" style="display: inline-flex;" #registerForm="ngForm">
+          <ion-list style="--background: white; padding-top: 0px; padding-bottom: 0px;">
+        <ion-item lines="full" style="--background: white;">
+          <ion-label>Username:</ion-label>
+          <ion-input [(ngModel)]="username" type="text" name="userName"
+            style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+        </ion-item>
+        <ion-item lines="full" style="--background: white;">
+          <ion-label>Password:</ion-label>
+          <ion-input [(ngModel)]="password" type="password" name="password"
+            style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+        </ion-item>
+        <ion-item lines="full" style="--background: white;">
+          <ion-label>Nome:</ion-label>
+          <ion-input [(ngModel)]="firstName" type="text" name="firstName"
+            style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+        </ion-item>
+        <ion-item lines="full" style="--background: white;">
+          <ion-label>Cognome:</ion-label>
+          <ion-input [(ngModel)]="lastName" type="text" name="lastName"
+            style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+        </ion-item>
+        <ion-button type="submit" size="default" color="primary" [disabled]="!registerForm.form.valid">
+          <ion-icon name="person-add-outline" slot="end"></ion-icon>REGISTRATI
+        </ion-button>
+        <ion-button (click)="registerFormToggle()" size="default" color="medium">
+          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>LOGIN
+        </ion-button>
+      </ion-list>
+    </form>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

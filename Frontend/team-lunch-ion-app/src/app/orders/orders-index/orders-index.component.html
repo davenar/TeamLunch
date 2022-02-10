@@ -1,0 +1,41 @@
+<ion-content>
+  <ion-row *ngIf="!todaysmenu" style="margin-top: 15px; padding-left: 15px; padding-right: 15px; font-weight: bold;">
+    <ion-item lines="full">
+      <h1>
+        Non c'è nessun Team Lunch in programma :'(
+      </h1>
+    </ion-item>
+  </ion-row>
+  <ion-row *ngIf="todaysmenu && orders.length === 0">
+    <ion-col size="4" size-md="4" size-sm="12" size-xs="12"></ion-col>
+    <ion-col size="4" size-md="4" size-sm="12" size-xs="12">
+      <h1 style="padding-left: 15px;">Che desolazione...</h1>
+    <img src="assets/balledifieno.gif" style="width: 100%;" />
+    <div style="display: inline-flex; padding-left: 15px;">
+    <ion-button (click)="create()" color="primary">Ordina per primo!</ion-button>
+    </div>
+    </ion-col>
+    <ion-col size="4" size-md="4" size-sm="12" size-xs="12"></ion-col>
+  </ion-row>
+  <ion-grid *ngIf="todaysmenu && orders.length > 0">
+    <ion-row style="margin-top: 25px;">
+      <ion-button (click)="create()" color="primary" style="padding-left: 15px;">Crea Ordine</ion-button>
+    </ion-row>
+    <ion-row>
+          <ion-card *ngFor="let value of orders" style="--background: white; border-top: 5px solid rgb(219, 193, 133); width: 225px;">
+            <ion-card-header>
+              <ion-item lines="full" style="--background: white;">
+                <ion-card-title style="font-weight: bold;">{{value.person}}</ion-card-title>
+              </ion-item>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item lines="none" style="--background: white;">
+                <ion-label>
+                  {{value.dish}} x{{value?.quantity}}
+                </ion-label>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+    </ion-row>
+  </ion-grid>
+</ion-content>

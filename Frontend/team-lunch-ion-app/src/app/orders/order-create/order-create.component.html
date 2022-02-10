@@ -1,0 +1,56 @@
+<ion-content>
+  <ion-grid *ngIf="user.isEnabled">
+    
+    <ion-row style="margin-top: 15px;">
+      <ion-col size="4" size-md="4" size-sm="12" size-xs="12">
+        <ion-button color="medium" (click)="goBack()">
+          <ion-icon slot="icon-only" name="arrow-back-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="4" size-md="4" size-sm="12" size-xs="12">
+        <ion-item style="margin-top: 15px;" lines="none">
+          
+          <h2>
+            <ion-icon name="restaurant-outline"></ion-icon>
+            Crea il tuo ordine!
+          </h2>
+          
+        </ion-item>
+        <ion-card style="--background: white; border-top: 5px solid rgb(219, 193, 133); display: inline-flex;">
+          <ion-card-content style="--background: white;">
+            <form (ngSubmit)="createOrder()" style="display: inline-flex;" #orderForm="ngForm">
+              <ion-list style="--background: white; padding-top: 0px; padding-bottom: 0px;">
+                <ion-item lines="full" style="--background: white;">
+                  <ion-label>Nome:</ion-label>
+                  <ion-input [(ngModel)]="person" type="text" name="person" disabled
+                    style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+                </ion-item>
+                <ion-item lines="full" style="--background: white;">
+                  <ion-label>Piatto:</ion-label>
+                  <ion-select [(ngModel)]="dish" name="dish" style="background-color: white;" required>
+                    <ion-select-option *ngFor="let item of dishes">{{item.dishName}}</ion-select-option>
+                  </ion-select>
+                  <!-- <ion-input [(ngModel)]="dish" type="text" name="dish" style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input> -->
+                </ion-item>
+                <ion-item lines="none" style="--background: white;">
+                  <ion-label>Quantità:</ion-label>
+                  <ion-input [(ngModel)]="quantity" min=1 type="number" name="quantity"
+                    style="--background: white; margin-right: 10px; margin-left: 10px;" required></ion-input>
+                  <ion-button type="submit" size="default" color="success" [disabled]="!orderForm.form.valid">
+                    <ion-icon name="send" slot="end"></ion-icon>Invia
+                  </ion-button>
+                </ion-item>
+              </ion-list>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="4" size-md="4" size-sm="12" size-xs="12"></ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="!user.isEnabled">
+    <ion-row>
+      <h1 style="color: rgb(192, 3, 3);">Utente non abilitato, contatta un Amministratore.</h1>
+    </ion-row>
+  </ion-grid>
+</ion-content>

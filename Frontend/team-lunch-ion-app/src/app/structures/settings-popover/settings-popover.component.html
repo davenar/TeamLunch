@@ -1,0 +1,9 @@
+<ion-content style="--ion-background-color: white;">
+<ion-list>
+  <ion-list-header style="font-weight: bold; color: rgb(98, 98, 98);">Ciao {{user.firstName}}!</ion-list-header>
+  <ion-item (click)="userSettings()" button><ion-icon slot="end" name="person-outline"></ion-icon>Impostazioni Utente</ion-item>
+  <ion-item (click)="adminIndex()" *ngIf="user.isAdmin" button ><ion-icon slot="end" name="key-outline"></ion-icon>Impostazioni Admin</ion-item>
+  <ion-item (click)="logoutAlert()" button style="font-weight: bold;"><ion-icon slot="end" name="log-out-outline"></ion-icon>Logout</ion-item>
+</ion-list>
+</ion-content>
+

@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start" style="margin-right: 20px;">
+      <ion-button fill="clear" size="large" style="font-size: 18px;" (click)="home()">
+        <ion-icon slot="start" name="menu-outline">
+        </ion-icon>TEAM LUNCH
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="start">
+      <ion-button fill="clear" size="default" (click)="ordersList()">
+        <ion-icon slot="start" name="restaurant-outline">
+        </ion-icon>Ordini
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <!-- <ion-button *ngIf="user" fill="clear" (click)="userSettings()">
+        <ion-icon slot="start" name="person-circle"></ion-icon>{{user.firstName}} {{user.lastName}}
+      </ion-button> -->
+      <ion-chip *ngIf="user" (click)="userSettings()" outline style="color: white; border-color: white; ">
+        <ion-avatar style="background-color: white;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png">
+        </ion-avatar>
+        <ion-label>{{user.firstName.toUpperCase()}} {{user.lastName.toUpperCase()}}</ion-label>
+      </ion-chip>
+      <ion-button *ngIf="!user" (click)="goToLogin()">
+        <ion-icon slot="start" name="log-in-outline"></ion-icon>LOGIN
+      </ion-button>
+      <ion-button (click)="settingsPopover($event)">
+        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

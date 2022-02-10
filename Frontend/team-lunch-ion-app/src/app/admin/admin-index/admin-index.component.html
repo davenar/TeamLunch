@@ -1,0 +1,132 @@
+<ion-content>
+  <ion-grid>
+    <!-- <ion-row style="margin-top: 20px;">
+      <ion-col>
+        <form (ngSubmit)="adminLogin()" style="display: inline-flex;">
+          <ion-input [(ngModel)]="userName" type="text" name="userName" placeholder="User"
+            style="--background: white; margin-right: 10px;"></ion-input>
+          <ion-input [(ngModel)]="password" type="password" name="password" placeholder="Password"
+            style="--background: white; margin-right: 10px;"></ion-input>
+          <ion-button *ngIf="!isAdmin" type="submit" color="primary">
+            <ion-icon name="log-in-outline" slot="end"></ion-icon>LOGIN
+          </ion-button>
+          <ion-button *ngIf="isAdmin" type="submit" color="success" [disabled]=true>
+            <ion-icon name="thumbs-up-outline" slot="end"></ion-icon>LOGGED-IN
+          </ion-button>
+          <ion-button color="medium" (click)="goBack()">
+            <ion-icon name="arrow-back-circle-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <p *ngIf="isNotAdmin" style="font-weight: bold; color: red; margin-left: 15px;">Username/password errati</p>
+        </form>
+      </ion-col>
+    </ion-row> -->
+    <ion-title>
+      <h1>Pannello Administrator</h1>
+    </ion-title>
+
+    <!-- #region Gestione Admin -->
+    <ion-row style="margin-top: 5px;" *ngIf="isRendering">
+      <ion-col size="6" size-md="6" size-sm="12" size-xs="12">
+        <ion-toolbar color="primary">
+          <ion-title>Menu del Giorno</ion-title>
+        </ion-toolbar>
+        <form style="margin-top: 10px;" (ngSubmit)="setTeamLunch()">
+          <ion-item>
+            <ion-label>Il giorno </ion-label>
+            <ion-input [(ngModel)]="todaysMenuDate" type="date" name="date" placeholder="Data"
+              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>mangiamo da: </ion-label>
+            <ion-input [(ngModel)]="todaysMenuRestaurantName" type="text" name="restaurant" placeholder="Ristorante"
+              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
+            <ion-button type="submit" color="primary">
+              <ion-icon name="send-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button (click)="deleteTeamLunch()" color="danger" *ngIf="isMenuIn">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </form>
+        <ion-toolbar color="primary" style="margin-top: 25px;" *ngIf="orders.length > 0 && isMenuIn">
+          <ion-title>Ordini</ion-title>
+        </ion-toolbar>
+        <ion-list *ngIf="orders.length > 0 && isMenuIn">
+          <ion-item *ngFor="let order of orders">
+            <ion-button (click)="updateOrder(order.id, order.person, order.dish, order.quantity)" color="warning">
+              <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button (click)="deleteOrder(order.id)" color="danger">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-label style="margin-left: 15px;">{{order?.person}}: </ion-label>
+            <ion-select [(ngModel)]="order.dish" name="dishOrdered" style="background-color: white;  margin-right: 10px; margin-left: 10px;" placeholder={{order.dish}}>
+              <ion-select-option *ngFor="let item of dishes" >{{item.dishName}}</ion-select-option>
+            </ion-select>
+             <ion-input [(ngModel)]="order.quantity" type="number" name="dishQuantity" placeholder="Qnt" min=1
+            style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="6" size-md="6" size-sm="12" size-xs="12">
+        <ion-toolbar color="primary" *ngIf="isMenuIn">
+          <ion-title>Gestione Piatti</ion-title>
+        </ion-toolbar>
+        <form style="margin-top: 10px;" (ngSubmit)="createDish()" *ngIf="isMenuIn">
+          <ion-item>
+            <ion-label>Aggiungi Piatto: </ion-label>
+            <ion-input [(ngModel)]="dishName" type="text" name="dish" placeholder="Piatto"
+              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
+            <ion-button type="submit" color="primary">
+              <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </form>
+        <ion-list *ngIf="isMenuIn">
+          <ion-item *ngFor="let dish of dishes">
+            <ion-label>Piatto n.{{dish?.id}}</ion-label>
+            <ion-input [(ngModel)]="dish.dishName" type="text" name="dish" placeholder="Piatto"
+              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
+            <ion-button (click)="updateDish(dish.id, dish.dishName)" color="warning">
+              <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button (click)="deleteDish(dish.id)" color="danger">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <!-- <ion-button (click)="dishInfo()" color="primary"><ion-icon name="information-circle-outline" slot="icon-only"></ion-icon></ion-button>           -->
+          </ion-item>
+        </ion-list>
+        <ion-toolbar color="primary" *ngIf="users.length > 0">
+          <ion-title>Gestione Utenti</ion-title>
+        </ion-toolbar>
+        <ion-list *ngIf="users.length > 0">
+          <ion-item *ngFor="let person of users">
+            <ion-label>{{person.firstName}} {{person.lastName}}</ion-label>
+            <ion-item>
+              <!-- <ion-input [(ngModel)]="person.firstName" type="text" name="firstName" placeholder="Nome" [disabled]="this.user.username === person.username"
+              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
+              <ion-input [(ngModel)]="person.lastName" type="text" name="lastName" placeholder="Cognome" [disabled]="this.user.username === person.username"
+              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input> -->
+              <ion-label>Abilitato</ion-label>
+              <ion-toggle [(ngModel)]="person.isEnabled" color="success" [disabled]="this.user.username === person.username"></ion-toggle>
+            </ion-item>
+            <ion-item>
+              <ion-label>Amministratore</ion-label>
+              <ion-toggle  color="warning" [(ngModel)]="person.isAdmin" [disabled]="this.user.username === person.username"></ion-toggle>
+            </ion-item>
+            <ion-button (click)="updateUser(person.id, person.firstName, person.lastName, person.username, person.password, person.isEnabled, person.isAdmin)" color="warning" [disabled]="this.user.username === person.username">
+              <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button (click)="deleteUser(person.id)" color="danger" [disabled]="this.user.username === person.username">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+
+      </ion-col>
+    </ion-row>
+    <!-- #endregion Gestione Admin -->
+
+
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,55 @@
+<ion-content>
+  <ion-row *ngIf="todaysmenu" style="margin-top: 15px; padding-left: 15px; padding-right: 15px; font-weight: bold;">
+    <ion-item lines="full">
+      <h1>
+        Il {{todaysMenuDate | date: 'dd/MM/y'}} si mangia da: {{todaysMenuRestaurantName}}! Prenota subito!
+      </h1>
+    </ion-item>
+  </ion-row>
+  <ion-row *ngIf="!todaysmenu" style="margin-top: 15px; padding-left: 15px; padding-right: 15px; font-weight: bold;">
+    <ion-item lines="full">
+      <h1>
+        Non c'è nessun Team Lunch in programma :'(
+      </h1>
+    </ion-item>
+  </ion-row>
+  <ion-row *ngIf="todaysmenu">
+    <ion-col size="6" size-md="6" size-sm="12" size-xs="12" *ngIf="dishes.length > 0">
+      <div style="display: block; margin-top: 15px; margin-left: auto; margin-right: auto;">
+        <ion-card style="--background: white; border-top: 5px solid rgb(219, 193, 133);">
+          <ion-card-header>
+            <ion-item style="--background: white;">
+              <ion-card-title style="font-weight: bold; color: gray;">Menu del giorno: </ion-card-title>
+            </ion-item>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item *ngFor="let dish of dishes" lines="full" style="--background: white;">
+              <ion-label>{{dish.dishName}}</ion-label>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-col>
+    <ion-col size="6" size-md="6" size-sm="12" size-xs="12" *ngIf="orders.length === 1">
+      <div style="padding-left: 15px; padding-right: 15px;">
+        <h2 style="word-wrap: break-word;">
+          <p style="display: inline;">
+            {{orders[0].person}} ha già fatto il suo ordine. Prenota anche tu!
+          </p>
+        </h2>
+        <ion-button (click)="create()" color="primary">Prenota<ion-icon name="restaurant-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-col>
+    <ion-col size="6" size-md="6" size-sm="12" size-xs="12" *ngIf="orders.length > 1">
+      <div style="padding-left: 15px; padding-right: 15px;">
+        <h2 style="word-wrap: break-word;">
+          <p style="display: inline;">
+            Alcune persone hanno già prenotato. Prenota anche tu!
+        </h2>
+        <ion-button (click)="create()" color="primary">Prenota<ion-icon name="restaurant-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>
