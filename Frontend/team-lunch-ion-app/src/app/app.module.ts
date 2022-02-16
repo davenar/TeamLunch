@@ -1,3 +1,4 @@
+import { OrdersMenuComponent } from './structures/orders-menu/orders-menu.component';
 import { UserSettingsComponent } from './users/user-settings/user-settings.component';
 import { SettingsPopoverComponent } from './structures/settings-popover/settings-popover.component';
 import { LoginComponent } from './users/login/login.component';
@@ -15,20 +16,31 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminIndexComponent } from './admin/admin-index/admin-index.component';
 import { JwtInterceptor } from './guards/jwt.interceptor';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent,
-                 NavbarComponent,
-                 HomepageComponent,
-                 AdminIndexComponent,
-                 LoginComponent,
-                 SettingsPopoverComponent,
-                 UserSettingsComponent],
+  declarations: [
+    AppComponent,
+    NavbarComponent,
+    HomepageComponent,
+    AdminIndexComponent,
+    LoginComponent,
+    SettingsPopoverComponent,
+    UserSettingsComponent
+  ],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, OrdersModule, HttpClientModule, FontAwesomeModule, FormsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-              { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
-            ],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    SharedModule,
+    FormsModule,
+    OrdersModule,
+  ],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

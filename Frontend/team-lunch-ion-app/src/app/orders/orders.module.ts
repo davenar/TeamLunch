@@ -1,3 +1,4 @@
+import { OrdersMenuComponent } from './../structures/orders-menu/orders-menu.component';
 import { FormsModule } from '@angular/forms';
 import { AppModule } from './../app.module';
 import { OrdersIndexComponent } from './orders-index/orders-index.component';
@@ -7,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { OrdersRoutingModule } from './orders-routing.module';
 import { OrderCreateComponent } from './order-create/order-create.component';
 import { IonicModule } from '@ionic/angular';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -16,8 +18,10 @@ import { IonicModule } from '@ionic/angular';
   ],
   imports: [
     CommonModule,
+    SharedModule,
     OrdersRoutingModule,
     IonicModule,
-    FormsModule  ]
+    FormsModule,
+    ]
 })
 export class OrdersModule { }

@@ -1,49 +1,48 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using TeamLunchAPI.Authorization;
+using TeamLunchAPI.Entities;
 using TeamLunchAPI.Helpers;
 using TeamLunchAPI.Models.Users;
 using TeamLunchAPI.Services;
 
 namespace TeamLunchAPI.Controllers
 {
-    [Authorize]
-    [ApiController]
-    [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private IUserService _userService;
-        private IMapper _mapper;
-        private readonly AppSettings _appSettings;
 
-        public UsersController(
-            IUserService userService,
-            IMapper mapper,
-            IOptions<AppSettings> appSettings)
+        public UsersController(IUserService userService, DataContext context) : base(context)
         {
             _userService = userService;
-            _mapper = mapper;
-            _appSettings = appSettings.Value;
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [HttpPost("Authenticate")]
         public IActionResult Authenticate(AuthenticateRequest model)
         {
             var response = _userService.Authenticate(model);
-            return response.IsAuth ? Ok(response) : NotFound();
+
+            return string.IsNullOrEmpty(response) ? NotFound() : Ok(response);
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
-        public IActionResult Register(RegisterRequest model)
+        [HttpPost("Register")]
+        public IActionResult Register(RegisterRequest request)
         {
-            _userService.Register(model);
+            var user = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Username = request.Username,
+                isEnabled = request.isEnabled,
+                isAdmin = request.isAdmin
+            };
+            _userService.Register(user, request.Password);
             return Ok(new { message = "Registration successful" });
         }
 
-        [HttpGet("FetchAllusers")]
+        [HttpGet("FetchAllUsers")]
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();
@@ -58,9 +57,18 @@ namespace TeamLunchAPI.Controllers
         }
 
         [HttpPut("UpdateUser/{id}")]
-        public IActionResult Update(int id, UpdateRequest model)
+        public IActionResult Update(int id, UpdateRequest request)
         {
-            _userService.Update(id, model);
+            var user = new User
+            {
+                Id = id,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Username = request.Username,
+                isEnabled = request.isEnabled,
+                isAdmin = request.isAdmin
+            };
+            _userService.Update(user, request.Password);
             return Ok(new { message = "User updated successfully" });
         }
 
@@ -72,23 +80,35 @@ namespace TeamLunchAPI.Controllers
         }
     }
 }
+
+
+//using AutoMapper;
 //using Microsoft.AspNetCore.Mvc;
 //using Microsoft.Extensions.Options;
 //using TeamLunchAPI.Authorization;
-//using TeamLunchAPI.Entities;
 //using TeamLunchAPI.Helpers;
 //using TeamLunchAPI.Models.Users;
 //using TeamLunchAPI.Services;
 
 //namespace TeamLunchAPI.Controllers
 //{
-//    public class UsersController : BaseController
+//    [Authorize]
+//    [ApiController]
+//    [Route("[controller]")]
+//    public class UsersController : ControllerBase
 //    {
 //        private IUserService _userService;
+//        private IMapper _mapper;
+//        private readonly AppSettings _appSettings;
 
-//        public UsersController(IUserService userService, DataContext context) : base(context)
+//        public UsersController(
+//            IUserService userService,
+//            IMapper mapper,
+//            IOptions<AppSettings> appSettings)
 //        {
 //            _userService = userService;
+//            _mapper = mapper;
+//            _appSettings = appSettings.Value;
 //        }
 
 //        [AllowAnonymous]
@@ -96,27 +116,18 @@ namespace TeamLunchAPI.Controllers
 //        public IActionResult Authenticate(AuthenticateRequest model)
 //        {
 //            var response = _userService.Authenticate(model);
-
-//            return string.IsNullOrEmpty(response) ? NotFound() : Ok(response);
+//            return response.IsAuth ? Ok(response) : NotFound();
 //        }
 
 //        [AllowAnonymous]
 //        [HttpPost("Register")]
-//        public IActionResult Register(RegisterRequest request)
+//        public IActionResult Register(RegisterRequest model)
 //        {
-//            var user = new User
-//            {
-//                FirstName = request.FirstName,
-//                LastName = request.LastName,
-//                Username = request.Username,
-//                isEnabled = request.isEnabled,
-//                isAdmin = request.isAdmin
-//            };
-//            _userService.Register(user, request.Password);
+//            _userService.Register(model);
 //            return Ok(new { message = "Registration successful" });
 //        }
 
-//        [HttpGet("FetchAllUsers")]
+//        [HttpGet("FetchAllusers")]
 //        public IActionResult GetAll()
 //        {
 //            var users = _userService.GetAll();
@@ -131,18 +142,9 @@ namespace TeamLunchAPI.Controllers
 //        }
 
 //        [HttpPut("UpdateUser/{id}")]
-//        public IActionResult Update(int id, UpdateRequest request)
+//        public IActionResult Update(int id, UpdateRequest model)
 //        {
-//            var user = new User
-//            {
-//                Id = id,
-//                FirstName = request.FirstName,
-//                LastName = request.LastName,
-//                Username = request.Username,
-//                isEnabled = request.isEnabled,
-//                isAdmin = request.isAdmin
-//            };
-//            _userService.Update(user, request.Password);
+//            _userService.Update(id, model);
 //            return Ok(new { message = "User updated successfully" });
 //        }
 

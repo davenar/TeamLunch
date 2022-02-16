@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
   api: {
-    localSwagger:'https://localhost:5001/api/',
-    auth:'https://localhost:5001/',
-    intercept:'https://localhost:5001/Users'
+    baseApiUrl:'https://localhost:44308/api/',
+    auth:'https://localhost:44308/',
+    intercept:'https://localhost:44308/Users'
   }
   // api: {
   //   localSwagger:'https://localhost:44313/api/',

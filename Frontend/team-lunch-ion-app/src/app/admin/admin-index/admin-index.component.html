@@ -1,29 +1,8 @@
 <ion-content>
   <ion-grid>
-    <!-- <ion-row style="margin-top: 20px;">
-      <ion-col>
-        <form (ngSubmit)="adminLogin()" style="display: inline-flex;">
-          <ion-input [(ngModel)]="userName" type="text" name="userName" placeholder="User"
-            style="--background: white; margin-right: 10px;"></ion-input>
-          <ion-input [(ngModel)]="password" type="password" name="password" placeholder="Password"
-            style="--background: white; margin-right: 10px;"></ion-input>
-          <ion-button *ngIf="!isAdmin" type="submit" color="primary">
-            <ion-icon name="log-in-outline" slot="end"></ion-icon>LOGIN
-          </ion-button>
-          <ion-button *ngIf="isAdmin" type="submit" color="success" [disabled]=true>
-            <ion-icon name="thumbs-up-outline" slot="end"></ion-icon>LOGGED-IN
-          </ion-button>
-          <ion-button color="medium" (click)="goBack()">
-            <ion-icon name="arrow-back-circle-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-          <p *ngIf="isNotAdmin" style="font-weight: bold; color: red; margin-left: 15px;">Username/password errati</p>
-        </form>
-      </ion-col>
-    </ion-row> -->
     <ion-title>
       <h1>Pannello Administrator</h1>
     </ion-title>
-
     <!-- #region Gestione Admin -->
     <ion-row style="margin-top: 5px;" *ngIf="isRendering">
       <ion-col size="6" size-md="6" size-sm="12" size-xs="12">
@@ -60,13 +39,17 @@
               <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
             <ion-label style="margin-left: 15px;">{{order?.person}}: </ion-label>
-            <ion-select [(ngModel)]="order.dish" name="dishOrdered" style="background-color: white;  margin-right: 10px; margin-left: 10px;" placeholder={{order.dish}}>
-              <ion-select-option *ngFor="let item of dishes" >{{item.dishName}}</ion-select-option>
+            <ion-select [(ngModel)]="order.dish" name="dishOrdered"
+              style="background-color: white;  margin-right: 10px; margin-left: 10px;" placeholder={{order.dish}}>
+              <ion-select-option *ngFor="let item of dishes">{{item.dishName}}</ion-select-option>
             </ion-select>
-             <ion-input [(ngModel)]="order.quantity" type="number" name="dishQuantity" placeholder="Qnt" min=1
-            style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
+            <ion-input [(ngModel)]="order.quantity" type="number" name="dishQuantity" placeholder="Qnt" min=1
+              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
           </ion-item>
         </ion-list>
+        <app-orders-menu *ngIf="orders.length > 0 && isMenuIn && totalOrders.length > 0" title="Totale Ordini"
+          [list]="totalOrders">
+        </app-orders-menu>
       </ion-col>
       <ion-col size="6" size-md="6" size-sm="12" size-xs="12">
         <ion-toolbar color="primary" *ngIf="isMenuIn">
@@ -93,7 +76,6 @@
             <ion-button (click)="deleteDish(dish.id)" color="danger">
               <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
-            <!-- <ion-button (click)="dishInfo()" color="primary"><ion-icon name="information-circle-outline" slot="icon-only"></ion-icon></ion-button>           -->
           </ion-item>
         </ion-list>
         <ion-toolbar color="primary" *ngIf="users.length > 0">
@@ -103,30 +85,28 @@
           <ion-item *ngFor="let person of users">
             <ion-label>{{person.firstName}} {{person.lastName}}</ion-label>
             <ion-item>
-              <!-- <ion-input [(ngModel)]="person.firstName" type="text" name="firstName" placeholder="Nome" [disabled]="this.user.username === person.username"
-              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input>
-              <ion-input [(ngModel)]="person.lastName" type="text" name="lastName" placeholder="Cognome" [disabled]="this.user.username === person.username"
-              style="--background: white; margin-right: 10px; margin-left: 10px;"></ion-input> -->
               <ion-label>Abilitato</ion-label>
-              <ion-toggle [(ngModel)]="person.isEnabled" color="success" [disabled]="this.user.username === person.username"></ion-toggle>
+              <ion-toggle [(ngModel)]="person.isEnabled" color="success"
+                [disabled]="this.user.username === person.username"></ion-toggle>
             </ion-item>
             <ion-item>
               <ion-label>Amministratore</ion-label>
-              <ion-toggle  color="warning" [(ngModel)]="person.isAdmin" [disabled]="this.user.username === person.username"></ion-toggle>
+              <ion-toggle color="warning" [(ngModel)]="person.isAdmin"
+                [disabled]="this.user.username === person.username"></ion-toggle>
             </ion-item>
-            <ion-button (click)="updateUser(person.id, person.firstName, person.lastName, person.username, person.password, person.isEnabled, person.isAdmin)" color="warning" [disabled]="this.user.username === person.username">
+            <ion-button
+              (click)="updateUser(person.id, person.firstName, person.lastName, person.username, person.password, person.isEnabled, person.isAdmin)"
+              color="warning" [disabled]="this.user.username === person.username">
               <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
             </ion-button>
-            <ion-button (click)="deleteUser(person.id)" color="danger" [disabled]="this.user.username === person.username">
+            <ion-button (click)="deleteUser(person.id)" color="danger"
+              [disabled]="this.user.username === person.username">
               <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-item>
         </ion-list>
-
       </ion-col>
     </ion-row>
     <!-- #endregion Gestione Admin -->
-
-
   </ion-grid>
 </ion-content>

@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeamLunchAPI.Helpers;
 using TeamLunchAPI.Models;
+using TeamLunchAPI.Authorization;
+
 
 namespace TeamLunchAPI.Controllers
 {
-    public class OrdersController : BaseController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class OrdersController : BaseApiController
     {
         public OrdersController(DataContext context) : base(context)
         {
         }
 
         // GET: api/Orders/FetchAllOrders
+        [AllowAnonymous]
         [HttpGet("FetchAllOrders")]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
@@ -24,6 +29,7 @@ namespace TeamLunchAPI.Controllers
         }
 
         // GET: api/Orders/GetOrder/5
+        [AllowAnonymous]
         [HttpGet("GetOrder/{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
@@ -39,6 +45,7 @@ namespace TeamLunchAPI.Controllers
 
         // PUT: api/Orders/UpdateOrder/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPut("UpdateOrder/{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
         {
@@ -70,6 +77,7 @@ namespace TeamLunchAPI.Controllers
 
         // POST: api/Orders/CreateOrder
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPost("CreateOrder")]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
@@ -80,6 +88,7 @@ namespace TeamLunchAPI.Controllers
         }
 
         // DELETE: api/Orders/DeleteOrder/5
+        [AllowAnonymous]
         [HttpDelete("DeleteOrder/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

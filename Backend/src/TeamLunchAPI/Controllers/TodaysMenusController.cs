@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeamLunchAPI.Helpers;
 using TeamLunchAPI.Models;
+using TeamLunchAPI.Authorization;
 
 namespace TeamLunchAPI.Controllers
 {
-    public class TodaysMenusController : BaseController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TodaysMenusController : BaseApiController
     {
         public TodaysMenusController(DataContext context) : base(context)
         {
         }
 
         // GET: api/TodaysMenus/FetchAllTodaysMenus
+        [AllowAnonymous]
         [HttpGet("FetchAllTodaysMenus")]
         public async Task<ActionResult<IEnumerable<TodaysMenu>>> GetTodaysMenus()
         {
@@ -24,6 +28,7 @@ namespace TeamLunchAPI.Controllers
         }
 
         // GET: api/TodaysMenus/GetTodaysMenu/5
+        [AllowAnonymous]
         [HttpGet("GetTodaysMenu/{id}")]
         public async Task<ActionResult<TodaysMenu>> GetTodaysMenu(int id)
         {
@@ -39,6 +44,7 @@ namespace TeamLunchAPI.Controllers
 
         // PUT: api/TodaysMenus/UpdateTodaysMenu/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPut("UpdateTodaysMenu/{id}")]
         public async Task<IActionResult> PutTodaysMenu(int id, TodaysMenu todaysMenu)
         {
@@ -70,6 +76,7 @@ namespace TeamLunchAPI.Controllers
 
         // POST: api/TodaysMenus/CreateTodaysMenu
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPost("CreateTodaysMenu")]
         public async Task<ActionResult<TodaysMenu>> PostTodaysMenu(TodaysMenu todaysMenu)
         {
@@ -80,6 +87,7 @@ namespace TeamLunchAPI.Controllers
         }
 
         // DELETE: api/TodaysMenus/DeleteTodaysMenu/5
+        [AllowAnonymous]
         [HttpDelete("DeleteTodaysMenu/{id}")]
         public async Task<IActionResult> DeleteTodaysMenu(int id)
         {
