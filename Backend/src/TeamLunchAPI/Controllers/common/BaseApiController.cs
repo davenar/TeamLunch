@@ -7,11 +7,11 @@ namespace TeamLunchAPI.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class BaseController: ControllerBase
+    public class BaseApiController : ControllerBase
     {
         protected readonly DataContext _context;
 
-        public BaseController(DataContext context)
+        public BaseApiController(DataContext context)
         {
             _context = context;
         }

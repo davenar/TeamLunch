@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeamLunchAPI.Helpers;
 using TeamLunchAPI.Models;
+using TeamLunchAPI.Authorization;
 
 namespace TeamLunchAPI.Controllers
 {
-    public class DishesController : BaseController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DishesController : BaseApiController
     {
         public DishesController(DataContext context) : base(context)
         {
         }
-
         // GET: api/Dishes/FetchAllDishes
+        [AllowAnonymous]
         [HttpGet("FetchAllDishes")]
         public async Task<ActionResult<IEnumerable<Dish>>> GetDishes()
         {
@@ -24,6 +27,7 @@ namespace TeamLunchAPI.Controllers
         }
 
         // GET: api/Dishes/GetDish/5
+        [AllowAnonymous]
         [HttpGet("GetDish/{id}")]
         public async Task<ActionResult<Dish>> GetDish(int id)
         {
@@ -39,6 +43,7 @@ namespace TeamLunchAPI.Controllers
 
         // PUT: api/Dishes/UpdateDish/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPut("UpdateDish/{id}")]
         public async Task<IActionResult> PutDish(int id, Dish dish)
         {
@@ -70,6 +75,7 @@ namespace TeamLunchAPI.Controllers
 
         // POST: api/Dishes/CreateDish
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPost("CreateDish")]
         public async Task<ActionResult<Dish>> PostDish(Dish dish)
         {
@@ -80,6 +86,7 @@ namespace TeamLunchAPI.Controllers
         }
 
         // DELETE: api/Dishes/DeleteDish/5
+        [AllowAnonymous]
         [HttpDelete("DeleteDish/{id}")]
         public async Task<IActionResult> DeleteDish(int id)
         {
