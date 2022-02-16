@@ -1,4 +1,5 @@
-import { OrderContract } from './../../contracts/order-contract';
+import { element } from 'protractor';
+import { OrderContract, TotalOrdersContract } from './../../contracts/order-contract';
 import { AdminService } from './../../admin/admin.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -14,7 +15,7 @@ import { isNgTemplate } from '@angular/compiler';
 })
 export class OrdersIndexComponent {
   orders: OrderContract[];
-  totalOrders: [] = [];
+  totalOrders: TotalOrdersContract[];
   todaysmenu: TodaysMenuContract;
   todaysMenuId = 1;
   todaysMenuDate: string;
@@ -23,12 +24,11 @@ export class OrdersIndexComponent {
 
   constructor(private service: OrderService, private router: Router, private adminSvc: AdminService) { }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.service.fetchOrders().subscribe(
       (response) => {
-        //this.orders = response;
-        this.orders = lodash.orderBy(response, ['dish'], ['asc']);
-        //this.totalOrders = lodash.countBy(response, (x: OrderContract) => x.dish);
+        this.orders = lodash.orderBy(response, ['person'], ['asc']);
+        this.getTotalOrders();
       }
     );
     this.getLastTodaysMenu();
@@ -51,11 +51,22 @@ export class OrdersIndexComponent {
     );
   }
 
-  getTotalOrders(){
-    const totalOrders = [...new Set(this.orders.map((item)=> item.dish))];
-
-    console.log(totalOrders);
+  getTotalOrders() {
+    this.totalOrders = lodash.orderBy(
+      [
+        ...this.orders.reduce((r, o) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          r.has(o.dish) || r.set(o.dish, Object.assign({ dish: o.dish, quantity: 0 }));
+          const item = r.get(o.dish);
+          item.quantity += o.quantity;
+          return r;
+        },
+          new Map()).values()
+      ],
+      ['quantity'], ['desc']);
+    console.log('totalOrders: ', this.totalOrders);
   }
+
 
 
 }

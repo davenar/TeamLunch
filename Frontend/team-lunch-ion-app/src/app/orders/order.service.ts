@@ -16,14 +16,14 @@ export class OrderService {
 
   fetchOrders = (): Observable<OrderContract[]> => {
     return this.client.get<OrderContract[]>(
-      environment.api.localSwagger + 'Orders'
+      environment.api.baseApiUrl + 'Orders/FetchAllOrders'
     );
   };
 
   createOrder(id: number, person: string, dish: string, quantity: number): Observable<OrderContract> {
     const request = {id, person, dish, quantity};
     return this.client.post<OrderContract>(
-      environment.api.localSwagger + 'Orders',
+      environment.api.baseApiUrl + 'Orders/CreateOrder',
       request
     );
   }
@@ -31,14 +31,14 @@ export class OrderService {
   updateOrder(id: number, person: string, dish: string, quantity: number): Observable<OrderContract> {
     const request = {id, person, dish, quantity};
     return this.client.put<OrderContract>(
-      environment.api.localSwagger + 'Orders/' + id,
+      environment.api.baseApiUrl + 'Orders/UpdateOrder/' + id,
       request
     );
   }
 
   deleteOrder(id: number): Observable<OrderContract> {
     return this.client.delete<OrderContract>(
-      environment.api.localSwagger + 'Orders/' + id
+      environment.api.baseApiUrl + 'Orders/DeleteOrder/' + id
     );
   }
 }

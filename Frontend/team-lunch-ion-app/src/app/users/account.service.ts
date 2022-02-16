@@ -27,7 +27,7 @@ export class AccountService {
   }
 
   login(username, password) {
-    return this.http.post<UserContract>(`${environment.api.auth}Users/authenticate`, { username, password })
+    return this.http.post<UserContract>(`${environment.api.auth}Users/Authenticate`, { username, password })
       .pipe(map(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem('user', JSON.stringify(user));
@@ -51,21 +51,21 @@ export class AccountService {
      isAdmin: boolean, password: string): Observable<UserContract> {
     const request = {firstName, lastName, username, isEnabled, isAdmin, password};
     return this.http.post<UserContract>(
-      environment.api.auth + 'Users/register',
+      environment.api.auth + 'Users/Register',
       request
     );
   }
 
   getAll() {
-    return this.http.get<UserContract[]>(`${environment.api.auth}Users`);
+    return this.http.get<UserContract[]>(`${environment.api.auth}Users/FetchAllUsers`);
   }
 
   getById(id: number) {
-    return this.http.get<UserContract>(`${environment.api.auth}Users/${id}`);
+    return this.http.get<UserContract>(`${environment.api.auth}Users/GetUser/${id}`);
   }
 
   update(id, params) {
-    return this.http.put(`${environment.api.auth}Users/${id}`, params)
+    return this.http.put(`${environment.api.auth}Users/UpdateUser/${id}`, params)
       .pipe(map(x => {
         // update stored user if the logged in user updated their own record
         if (id === this.userValue.id) {
@@ -81,7 +81,7 @@ export class AccountService {
   }
 
   delete(id: number) {
-    return this.http.delete(`${environment.api.auth}Users/${id}`)
+    return this.http.delete(`${environment.api.auth}Users/DeleteUser/${id}`)
       .pipe(map(x => {
         // auto logout if the logged in user deleted their own record
         if (id === this.userValue.id) {

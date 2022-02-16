@@ -1,0 +1,14 @@
+<ion-card class="card">
+  <ion-card-header style="padding-bottom: 5px; padding-top: 10px;">
+    <ion-item lines="none" style="--background: white;">
+      <ion-card-title class="title">{{title}}</ion-card-title>
+    </ion-item>
+  </ion-card-header>
+  <ion-card-content>
+    <ul style="list-style: none; margin: 0px; padding: 0px;">
+   <li class="menu-list" *ngFor="let order of list">
+      x{{order.quantity}}&nbsp;{{order.dish | uppercase}}
+    </li> 
+  </ul>
+  </ion-card-content>
+</ion-card>

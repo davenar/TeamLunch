@@ -15,14 +15,14 @@ export class AdminService {
 
   fetchMenus = (): Observable<TodaysMenuContract[]> => {
     return this.client.get<TodaysMenuContract[]>(
-      environment.api.localSwagger + 'TodaysMenus'
+      environment.api.baseApiUrl + 'TodaysMenus/FetchAllTodaysMenus'
     );
   };
 
   createTodayMenu(id: number, date: string, restaurantName: string): Observable<TodaysMenuContract> {
     const request = {id, date, restaurantName};
     return this.client.post<TodaysMenuContract>(
-      environment.api.localSwagger + 'TodaysMenus',
+      environment.api.baseApiUrl + 'TodaysMenus/CreateTodaysMenu',
       request
     );
   }
@@ -30,7 +30,7 @@ export class AdminService {
   getTodaysMenu(id: number): Observable<TodaysMenuContract> {
     const request = { id };
     return this.client.post<TodaysMenuContract>(
-      environment.api.localSwagger + 'TodaysMenus/' + request,
+      environment.api.baseApiUrl + 'TodaysMenus/GetTodaysMenu/' + request,
       request
     );
   }
@@ -38,27 +38,27 @@ export class AdminService {
   updateTodaysMenu(id: number, date: string, restaurantName: string): Observable<TodaysMenuContract> {
     const request = {id, date, restaurantName};
     return this.client.put<TodaysMenuContract>(
-      environment.api.localSwagger + 'TodaysMenus/' + id,
+      environment.api.baseApiUrl + 'TodaysMenus/UpdateTodaysMenu/' + id,
       request
     );
   }
 
   deleteTodaysMenu(id: number): Observable<TodaysMenuContract> {
     return this.client.delete<TodaysMenuContract>(
-      environment.api.localSwagger + 'TodaysMenus/' + id
+      environment.api.baseApiUrl + 'TodaysMenus/DeleteTodaysMenu/' + id
     );
   }
 
   fetchDishes = (): Observable<DishContract[]> => {
     return this.client.get<DishContract[]>(
-      environment.api.localSwagger + 'Dishes'
+      environment.api.baseApiUrl + 'Dishes/FetchAllDishes'
     );
   };
 
   createDish(id: number, dishName: string, dishImg: string, ingredients: string): Observable<DishContract> {
     const request = {id, dishName, dishImg, ingredients};
     return this.client.post<DishContract>(
-      environment.api.localSwagger + 'Dishes',
+      environment.api.baseApiUrl + 'Dishes/CreateDish',
       request
     );
   }
@@ -66,7 +66,7 @@ export class AdminService {
   getDish(id: number): Observable<DishContract> {
     const request = { id };
     return this.client.post<DishContract>(
-      environment.api.localSwagger + 'Dishes/' + request,
+      environment.api.baseApiUrl + 'Dishes/GetDish/' + request,
       request
     );
   }
@@ -74,14 +74,14 @@ export class AdminService {
   updateDish(id: number, dishName: string, dishImg: string, ingredients: string): Observable<DishContract> {
     const request = {id, dishName, dishImg, ingredients};
     return this.client.put<DishContract>(
-      environment.api.localSwagger + 'Dishes/' + id,
+      environment.api.baseApiUrl + 'Dishes/UpdateDish/' + id,
       request
     );
   }
 
   deleteDish(id: number): Observable<DishContract> {
     return this.client.delete<DishContract>(
-      environment.api.localSwagger + 'Dishes/' + id
+      environment.api.baseApiUrl + 'Dishes/DeleteDish/' + id
     );
   }
 }

@@ -1,6 +1,6 @@
 import { ToastService } from './../../shared/services/toast.service';
 import { UserContract } from 'src/app/contracts/user-contract';
-import { OrderContract } from './../../contracts/order-contract';
+import { OrderContract, TotalOrdersContract } from './../../contracts/order-contract';
 import { OrderService } from './../../orders/order.service';
 import { DishContract } from './../../contracts/dish-contract';
 import { TodaysMenuContract } from './../../contracts/todays-menu-contract';
@@ -10,6 +10,7 @@ import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AccountService } from 'src/app/users/account.service';
 import { first } from 'rxjs/operators';
+import * as lodash from 'lodash';
 
 @Component({
   selector: 'app-admin-index',
@@ -53,11 +54,12 @@ export class AdminIndexComponent {
   orderPerson: string;
   orderDish: string;
   orderQuantity: number;
+  totalOrders: TotalOrdersContract[];
 
   constructor(private service: AdminService, private alertController: AlertController, private orderSvc: OrderService,
-              private router: Router, private accountSvc: AccountService, private toastSvc: ToastService) {
-                this.accountSvc.user.subscribe(x => this.user = x);
-               }
+    private router: Router, private accountSvc: AccountService, private toastSvc: ToastService) {
+    this.accountSvc.user.subscribe(x => this.user = x);
+  }
 
   ionViewWillEnter() {
     this.isRendering = true;
@@ -68,13 +70,13 @@ export class AdminIndexComponent {
   }
 
   // #region Gestione Utenti
-  fetchUsers(){
+  fetchUsers() {
     this.accountSvc.getAll()
-            .pipe(first())
-            .subscribe(users => this.users = users);
+      .pipe(first())
+      .subscribe(users => this.users = users);
   }
 
-  deleteUser(userToDelete: number){
+  deleteUser(userToDelete: number) {
     this.userId = userToDelete;
     this.accountSvc.delete(this.userId).subscribe(
       (response) => {
@@ -83,7 +85,8 @@ export class AdminIndexComponent {
     );
   }
 
-  updateUser(userId: number, firstName: string, lastName: string, username: string, password: string, isEnabled: boolean, isAdmin: boolean){
+  updateUser(userId: number, firstName: string, lastName: string, username: string, password: string,
+    isEnabled: boolean, isAdmin: boolean) {
     this.userId = userId;
     const params = {
       firstName, lastName, username, password, isEnabled, isAdmin
@@ -101,7 +104,7 @@ export class AdminIndexComponent {
     this.service.fetchMenus().subscribe(
       (response) => {
         console.log('response: ' + response);
-        if (response.length > 0){
+        if (response.length > 0) {
           this.isMenuIn = true;
         } else {
           this.isMenuIn = false;
@@ -122,7 +125,7 @@ export class AdminIndexComponent {
       (r: TodaysMenuContract) => {
         this.getLastTodaysMenu();
         this.toastSvc.presentToast(
-          'Team Lunch del '+ this.todaysMenuDate + ' da ' + this.todaysMenuRestaurantName + ' settato correttamente.','success');
+          'Team Lunch del ' + this.todaysMenuDate + ' da ' + this.todaysMenuRestaurantName + ' settato correttamente.', 'success');
       });
   };
 
@@ -190,8 +193,8 @@ export class AdminIndexComponent {
     await alert.present();
   }
 
-  updateMenuRequest(){
-    if(this.isMenuIn){
+  updateMenuRequest() {
+    if (this.isMenuIn) {
       this.updateTodaysMenu();
     } if (!this.isMenuIn) {
       this.createTodaysMenu();
@@ -261,48 +264,65 @@ export class AdminIndexComponent {
   // #endregion
 
   // #region Gestione Ordini
-    fetchOrders(){
-      this.orderSvc.fetchOrders().subscribe(
+  fetchOrders() {
+    this.orderSvc.fetchOrders().subscribe(
+      (response) => {
+        this.orders = response;
+        this.getTotalOrders();
+      }
+    );
+  }
+
+  updateOrder(orderIdToUpdate: number, orderPersonToUpdate: string, orderDishToUpdate: string, orderQuantityToUpdate: number) {
+    this.orderId = orderIdToUpdate;
+    this.orderPerson = orderPersonToUpdate;
+    this.orderDish = orderDishToUpdate;
+    this.orderQuantity = orderQuantityToUpdate;
+    this.orderSvc.updateOrder(this.orderId, this.orderPerson, this.orderDish, this.orderQuantity).subscribe(
+      (r) => {
+        this.fetchOrders();
+      }
+    );
+  }
+
+  deleteOrder(orderToDelete: number) {
+    this.orderId = orderToDelete;
+    this.orderSvc.deleteOrder(this.orderId).subscribe(
+      (response) => {
+        this.fetchOrders();
+      }
+    );
+  }
+
+  deleteAllOrders() {
+    this.orders.forEach(order => {
+      this.orderSvc.deleteOrder(order.id).subscribe(
         (response) => {
-          this.orders = response;
+          console.log('ordine n.' + order.id + ' eliminato');
         }
       );
-    }
+    });
+    this.fetchOrders();
+  }
 
-    updateOrder(orderIdToUpdate: number, orderPersonToUpdate: string, orderDishToUpdate: string, orderQuantityToUpdate: number) {
-      this.orderId = orderIdToUpdate;
-      this.orderPerson = orderPersonToUpdate;
-      this.orderDish = orderDishToUpdate;
-      this.orderQuantity = orderQuantityToUpdate;
-      this.orderSvc.updateOrder(this.orderId, this.orderPerson, this.orderDish, this.orderQuantity).subscribe(
-        (r) => {
-          this.fetchOrders();
-        }
-      );
-    }
-
-    deleteOrder(orderToDelete: number) {
-      this.orderId = orderToDelete;
-      this.orderSvc.deleteOrder(this.orderId).subscribe(
-        (response) => {
-          this.fetchOrders();
-        }
-      );
-    }
-
-    deleteAllOrders(){
-      this.orders.forEach(order => {
-        this.orderSvc.deleteOrder(order.id).subscribe(
-          (response) => {
-            console.log('ordine n.' + order.id + ' eliminato');
-          }
-        );
-      });
-      this.fetchOrders();
-    }
+  getTotalOrders() {
+    this.totalOrders = lodash.orderBy(
+      [
+        ...this.orders.reduce((r, o) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          r.has(o.dish) || r.set(o.dish, Object.assign({ dish: o.dish, quantity: 0 }));
+          const item = r.get(o.dish);
+          item.quantity += o.quantity;
+          return r;
+        },
+          new Map()).values()
+      ],
+      ['quantity'], ['desc']);
+    console.log('totalOrders: ', this.totalOrders);
+  }
   // #endregion
 
-  goBack(){
+  goBack() {
     this.router.navigate(['/home']);
   }
 

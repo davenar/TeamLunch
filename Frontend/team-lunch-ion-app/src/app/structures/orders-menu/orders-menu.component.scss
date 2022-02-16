@@ -1,0 +1,30 @@
+body {
+  background-color: rgb(219, 193, 133);
+}
+
+.card {
+  background-color: #fff;
+  // box-shadow: 0.5rem 0.5rem 0 #87b153;
+  width: 225px;
+}
+
+.title {
+  color: black;
+  font-family: monospace;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin: 8px;
+  font-size: x-large;
+  font-weight: bolder;
+  cursor: default;
+}
+
+.menu-list {
+  font-family: monospace;
+  font-size: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: larger;
+  font-weight: bold;
+  cursor: default;
+}
